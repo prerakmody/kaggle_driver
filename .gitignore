@@ -1,0 +1,16 @@
+*.pdf
+*.ipynb
+*.zip
+*.pyc
+*.csv
+*.txt
+Keras_Kaggle/*
+Papers/*
+Theano/*
+expand_dataset/*
+imgs/*
+keras/*
+subm/*
+test_theano/*
+cache/*
+cache_exp/*

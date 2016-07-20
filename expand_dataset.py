@@ -4,7 +4,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 def get_im(path,w,h):
-    img = cv2.imread(path, 0)
+    # img = cv2.imread(path,0)
+    img = cv2.imread(path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
     resized = cv2.resize(img, (w, h))
     return resized
 

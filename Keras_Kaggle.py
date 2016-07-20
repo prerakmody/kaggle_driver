@@ -12,9 +12,7 @@ from keras.utils import np_utils
 w, h = 128, 96
 
 def get_im(path):
-    # Load as grayscale
     img = cv2.imread(path, 0)
-    # Reduce size
     resized = cv2.resize(img, (128, 96))
     return resized
 
@@ -198,6 +196,8 @@ from keras.models import model_from_json
 from keras.layers.normalization import BatchNormalization
 from keras.optimizers import SGD
 from keras.layers.advanced_activations import PReLU
+from keras import backend as K
+
 
 model_from_cache = 0
 if model_from_cache == 1:
@@ -206,11 +206,12 @@ else:
     t1 = time.time()
     print '======================================DEEP LEARNING==================================================='
     #need to add in a lot more imge modifications like flipping, contrast changing, brightness changing etc...
+    #As a preprocessing step, the input image is centered by subtracting the mean image created from a large data set.
     model = Sequential()
     model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
                             border_mode='valid', 
                             input_shape=(1, img_rows, img_cols)))    #1 x 96 x 128
-    print 'Conv1:',model.output_shape                                #32 x 94 x 124
+    print 'Conv1:',model.output_shape                                #32 x 94 x 126
     # model.add(BatchNormalization())
     # model.add(Activation('relu'))    #the activation function to the convoluted value: Rectified Linear Units
     model.add(Activation(PReLU()))
@@ -241,6 +242,7 @@ else:
     model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1,
               validation_data=(X_test, Y_test))
     print 'Model Fitted ...', time.time() - t1,'s'
+    print model.summary()
 
 score = model.evaluate(X_test, Y_test, verbose=0)
 print('Score: ', score, ' ', time.time() - t1,'s')
