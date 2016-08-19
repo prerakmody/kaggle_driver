@@ -164,7 +164,7 @@ else:
 # batch_size = 64    #[PONDER]can this be made bigger??
 batch_size = 128
 nb_classes = 10
-nb_epoch = 1
+nb_epoch = 64
 # input image dimensions
 img_rows, img_cols = 96, 128
 # number of convolutional filters to use
@@ -172,7 +172,7 @@ nb_filters = 32
 # size of pooling area for max pooling
 nb_pool = 2
 # convolution kernel size
-nb_conv = 3
+nb_conv = 4
 
 train_data = np.array(train_data, dtype=np.uint8)
 train_target = np.array(train_target, dtype=np.uint8)
@@ -197,6 +197,8 @@ from keras.layers.normalization import BatchNormalization
 from keras.optimizers import SGD
 from keras.layers.advanced_activations import PReLU
 from keras import backend as K
+# import theano
+# theano.config.lib.cnmem =1
 
 
 model_from_cache = 0
@@ -215,13 +217,17 @@ else:
     # model.add(BatchNormalization())
     # model.add(Activation('relu'))    #the activation function to the convoluted value: Rectified Linear Units
     model.add(Activation(PReLU()))
+    model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+    print 'MaxPool1:',model.output_shape
+
     model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
     print 'Conv2:',model.output_shape                               #32 x 92 x 124
     # model.add(BatchNormalization())
     # model.add(Activation('relu'))
     model.add(Activation(PReLU()))
     model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-    print 'MaxPool1:', model.output_shape                           #32 x 46 x 62
+    print 'MaxPool2:', model.output_shape                           #32 x 46 x 62
+    
     #You could convolve or max-pool the data a little bit more here to obtain higher-level features
     model.add(Dropout(0.25)) #regularizaion technique
     model.add(Flatten())                                            #1 x 91264
@@ -235,7 +241,7 @@ else:
     print 'Final Dense:', model.output_shape
     model.add(Activation('softmax'))
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+    # model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
     # model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
     model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
     print 'Model Compilation:',time.time()-t1,'s'
@@ -298,3 +304,13 @@ create_submission(predictions, test_id, score[0])
 # HINT: Use the Theano flag 'exception_verbosity=high' for a debugprint and storage map footprint of this apply node.
 # Error allocating 93454336 bytes of device memory (out of memory). Driver report 89174016 bytes free and 2147483648 bytes total 
 # [Finished in 68.9s]
+
+"""
+To check g++ compiler version
+g++ --version
+g++ -v
+gcc --version
+gcc -v
+theano-cache clear
+cuda-memcheck
+"""

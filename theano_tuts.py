@@ -39,17 +39,17 @@ def layer(no_filters, inp_layers, filter_x, filter_y, pool_x, pool_y, inp_img, l
 def get_image(path):
 	img = Image.open(path)
 	img = numpy.asarray(img, dtype='float32') / 256.
-	img_ = img.transpose(2, 0, 1).reshape(1, img.shape[2], img.shape[0], img.shape[1])
+	img_ = img.transpose(2, 0, 1).reshape(1, img.shape[2], img.shape[0], img.shape[1]) #(depth, width, height) -> (1, depth, width, height)
 	return img_
 
 def save_images(layer_id, no_filters, img_4dtensor, name):
 	plt.axis('off'); plt.gray()
 	my_dpi = 96
 	for i in range(no_filters): 
-		#pass
+		pass
 		# plt.figure(figsize=(filtered_img[0][i].shape[0]/my_dpi, filtered_img[0][i].shape[1]/my_dpi), dpi=my_dpi)
-		plt.imshow(img_4dtensor[0, i, :, :])
-		plt.savefig('test_theano/layer' + str(layer_id) + '_' + str(i+1) + '_' +str(name) + '.jpg', dpi=my_dpi)
+		# plt.imshow(img_4dtensor[0, i, :, :])
+		# plt.savefig('test_theano/layer' + str(layer_id) + '_' + str(i+1) + '_' +str(name) + '.jpg', dpi=my_dpi)
 
 if __name__ == "__main__":
 	no_filters = 12;
